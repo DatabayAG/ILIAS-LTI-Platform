@@ -64,7 +64,7 @@ The **non-goals** for this implementation are:
 * Do not provide compatibility for LTI < 1.3. Using LTI 1.1 is [discouraged](https://www.imsglobal.org/specs/ltiv1p1p1/implementation-guide)
   even by its own creators.
 * Compatibility to existing LTI implementations in the ILIAS ecosystem is not intended.
-* Reusing code from existing LTI implemenation in the ILIAS ecosystem is not intended.
+* Reusing code from existing LTI implementation in the ILIAS ecosystem is not intended.
 * The implementation uses an existing LTI 1.3 PHP implementation to implement LTI 1.3,
   it is not intended to provide a generic LTI 1.3 implementation for PHP.
 * The implementation shall not implement any vendor specific logic to accomodate certain
