@@ -72,9 +72,137 @@ The **non-goals** for this implementation are:
   
 ## Use-Cases
 
+This section describes the use cases for the plugin as far as they are specific to
+the intended LTI platform implementation. Use cases that concern generic ILIAS
+functionality, such as granting permission via RBAC or adding options in the repository
+of ILIAS are listed here only if there shall be notable deviations from standard
+behaviour.
+
+TODO: Read more about:
+
+* [Assignments and Grade Service](https://www.imsglobal.org/spec/lti-ags/v2p0/)
+* [Name and Role Provisioning Service](https://www.imsglobal.org/spec/lti-nrps/v2p0)
+* [Deep Linking Specification](https://www.imsglobal.org/spec/lti-dl/v2p0)
+
+and include derived use cases here.
+
+### Deployment
+
+* As an **administator** I want to include a LTI tool via the single tenant deployment
+  model into my installation.
+  * As a **content creator** I want to include LTI tools deployed in the single tenant
+    model into my content.
+* As an **administrator** I want to include a LTI tool via the multi tenant deploxment
+  model into my installation.
+  * As a **content creator** I want to include LTI tools deployed in the multi tenant
+    model into my content.
+* As a **content creator** I want to include a LTI tool via the `deployment id as
+  account identifier` model by attaching a certain deployment of a tool to my own
+  account.
+* As a **content creator** I want to include an LTI tool deployed via any model.
+
+### Presentation
+
+* As a **content creator** I want to include an LTI tool as a repository object.
+* As a **content creator** I want to include an LTI tool as part of a ILIAS page
+  editor page.
+* As a **content creator** I want to present an LTI tool directly in ILIAS so it
+  appears as normal ILIAS content.
+* As a **content creator** I want to be able to forward people to an external page
+  that contains the LTI tool.
+* As a **content creator** I want to decide which form of presentation (via page
+  editor, as "normal" ILIAS content, via external page) is used for a certain LTI
+  tool deplyoment.
+* As a **learner** I want to have a visual indication of the tool provider and the
+  mode of presentation for a certain LTI tool repository object.
+
+### Usage
+
+### Include Tools in the content.
+
+### Monitoring
+
+* As a **tutor** I want to know, which of my learners have already used a tool.
+* As a **tutor** I want to know the learning progress of my learners for a tool.
+* TODO: As a **tutor** I want something with LTI-based outcome from AGS.
+* As an **administator** I want to analyze problems of learners with a certain tool.
+
 ## Facilities and Views
 
+This section describes the individual parts that make the plugin functionality.
+It lists all things that users will find in ILIAS and briefly describes their content
+and functionality.
+
+### Plugin
+
+The functionality is delivered via a ILIAS repository object plugin. The plugin
+provides the core repository object and allows to add and configure tools. It also
+contains the code required for the auxiliary page component plugin.
+
+#### Plugin Configuration
+
+### Tool Configuration
+
+Via the global screen service, the plugin provides an item for the main menu that
+gives access to a configuration screen for tools provided in the single and multi
+tenant deployment modes.
+
+### Repository Object
+
+#### Creation Screen
+
+#### Settings Tab
+
+The settings screen offers the following standard ILIAS components:
+
+* properties of ilObject (title, description)
+* availability (on-/offline, period)
+
+TODO: Do we want to tie icons to the *object* or to the *tool*?
+
+#### Participants Tab
+
+The participants tabs shows a UI data table containing all users that have actively
+interacted with the tool deployed via the repository object. The table contains
+the following columns:
+
+* username of the user that has interacted with the tool
+* additional profile data provided via the according ILIAS logic ("Visible in
+  Course" for the lack of possibility to add own scopes)
+* date of first and last interaction
+* ILIAS learning progress
+
+It supports these actions (m = multi, s = single):
+
+* send mail (m/s)
+* view logs (m/s)
+* view outcome (m/s, TODO: wording?!?)
+* delete outcome (m/s) 
+
+#### Learning Progress Tab
+
+#### RBAC and Permissions Tab
+
+### Page Component Plugin
+
+The core functionality can be enhanced via a page component plugins. The plugin
+only hooks the code from the main plugin with the page editor system of ILIAS.
+Once the component revision is implemented and one plugin can hook into multiple
+ILIAS systems, the page component plugin can go away and the main plugin can
+provide the desired functionality directly.
+
+### Page Component
+
 ## Data Model
+
+This section describes the data that the plugin needs to manage itself. It does
+not describe hooks into data of other ILIAS systems that the plugin uses via interfaces.
+
+### Tool
+
+### Tool Deployment
+
+### Tool Deployment Interaction Log
 
 ## Implementation
 
