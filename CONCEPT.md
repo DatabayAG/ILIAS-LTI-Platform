@@ -111,7 +111,7 @@ and include derived use cases here.
 * As a **content creator** I want to include an LTI tool as part of a ILIAS page
   editor page.
 * As a **content creator** I want to present/embed an LTI tool directly in ILIAS
-  so it   appears as normal ILIAS content.
+  so it appears as normal ILIAS content.
 * As a **content creator** I want to be able to forward people to an external page
   that contains the LTI tool.
 * As a **content creator** I want to decide which form of presentation (via page
