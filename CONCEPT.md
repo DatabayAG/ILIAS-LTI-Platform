@@ -54,10 +54,14 @@ The **goals** for this implementation are:
 * Use standard mechanisms and facilities of ILIAS, such as standard endpoints,
   ilObject, RBAC, the UI framework, as much as possible. Use modern patterns and
   approaches of the ILIAS community, such as UI framework, repository pattern and
-  dependency injection as much as possible. Overall, this should be an implementation
+  dependency injection as much as possible. Ensure the source code is maintainable by
+  adhering to clean code principles,  comprehensive documentation, and thorough testing.
+  This includes using consistent coding standards, modular design, and automated testing
+  to facilitate easy updates and collaboration.
+  Overall, this should be an implementation
   that looks and feels like ILIAS, in the frontend and the backend, as much as possible.
 * The implementation should provide a basis to create specialized implementations
-  for specific LTI 1.3 tools.
+  for specific LTI 1.3 tools, e.g. by copying the plugin repository.
 
 The **non-goals** for this implementation are:
 
@@ -92,7 +96,7 @@ and include derived use cases here.
   model into my installation.
   * As a **content creator** I want to include LTI tools deployed in the single tenant
     model into my content.
-* As an **administrator** I want to include a LTI tool via the multi tenant deploxment
+* As an **administrator** I want to include a LTI tool via the multi tenant deployment
   model into my installation.
   * As a **content creator** I want to include LTI tools deployed in the multi tenant
     model into my content.
@@ -106,8 +110,8 @@ and include derived use cases here.
 * As a **content creator** I want to include an LTI tool as a repository object.
 * As a **content creator** I want to include an LTI tool as part of a ILIAS page
   editor page.
-* As a **content creator** I want to present an LTI tool directly in ILIAS so it
-  appears as normal ILIAS content.
+* As a **content creator** I want to present/embed an LTI tool directly in ILIAS
+  so it   appears as normal ILIAS content.
 * As a **content creator** I want to be able to forward people to an external page
   that contains the LTI tool.
 * As a **content creator** I want to decide which form of presentation (via page
@@ -190,6 +194,10 @@ only hooks the code from the main plugin with the page editor system of ILIAS.
 Once the component revision is implemented and one plugin can hook into multiple
 ILIAS systems, the page component plugin can go away and the main plugin can
 provide the desired functionality directly.
+As long as the component revision is not fully implementated, the communication
+between both plugins should be done via well defined interfaces.
+The page component plugin must not depend on a concrete implementation or any
+kind of "duck typing" interface of the repository object plugin.
 
 ### Page Component
 
