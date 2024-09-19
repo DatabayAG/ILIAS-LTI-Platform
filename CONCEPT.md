@@ -120,6 +120,10 @@ and include derived use cases here.
 * As a **learner** I want to have a visual indication of the tool provider and the
   mode of presentation for a certain LTI tool repository object.
 
+### Learning Progress and Grading
+
+TODO @mjansenDatabay
+
 ### Usage
 
 ### Include Tools in the content.
@@ -185,7 +189,11 @@ It supports these actions (m = multi, s = single):
 
 #### Learning Progress Tab
 
+TODO @mjansenDatabay
+
 #### RBAC and Permissions Tab
+
+TODO @mjansenDatabay
 
 ### Page Component Plugin
 
