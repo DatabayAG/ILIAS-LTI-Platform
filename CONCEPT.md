@@ -120,10 +120,6 @@ and include derived use cases here.
 * As a **learner** I want to have a visual indication of the tool provider and the
   mode of presentation for a certain LTI tool repository object.
 
-### Learning Progress and Grading
-
-TODO @mjansenDatabay
-
 ### Usage
 
 ### Include Tools in the content.
@@ -131,8 +127,10 @@ TODO @mjansenDatabay
 ### Monitoring
 
 * As a **tutor** I want to know, which of my learners have already used a tool.
+* As a **tutor** I want to have access to the grade book of a tool to have insights
+  about the performance of my learners, if the tool supports the
+  "Assignment and Grade Services Specification".
 * As a **tutor** I want to know the learning progress of my learners for a tool.
-* TODO: As a **tutor** I want something with LTI-based outcome from AGS.
 * As an **administator** I want to analyze problems of learners with a certain tool.
 
 ## Facilities and Views
@@ -166,7 +164,9 @@ The settings screen offers the following standard ILIAS components:
 * properties of ilObject (title, description)
 * availability (on-/offline, period)
 
-TODO: Do we want to tie icons to the *object* or to the *tool*?
+TODO:
+* @klees: Do we want to tie icons to the *object* or to the *tool*?
+* @mjansenDatabay: IMO the icon should be tied to the *tool*, **not** to the *object*.
 
 #### Participants Tab
 
@@ -184,16 +184,90 @@ It supports these actions (m = multi, s = single):
 
 * send mail (m/s)
 * view logs (m/s)
-* view outcome (m/s, TODO: wording?!?)
+* view grades (m/s)
 * delete outcome (m/s) 
+
+#### Grade Book
+
+The grade book tab provides a view to the grades of the users that have interacted
+with the tool. It is visible/accessible, if the tool supports the "Assignment and Grade
+Services Specification".
+
+TODO @mjansenDatabay
 
 #### Learning Progress Tab
 
-TODO @mjansenDatabay
+The learning progress tab provides screens to optionally enable and access the
+learning progress of ILIAS users of the tool. It is visible/accessible,
+if the tool supports the "Assignment and Grade Services Specification".
+
+The learning progress is disabled by default and can be enabled in the "Settings"
+(sub-)tab. The settings screen must provide the following modes:
+
+1. Learning Progress is Deactivated (default)
+2. Learning Progress is Activated
+  * TODO @mjansenDatabay: What's the name of this mode? How do we derive the ILIAS LP
+    based on the provided results/scores.
+
+If the learning progress is enabled, the following sub-tabs are available:
+
+1. Users
+2. Summary
+
+##### Users
+
+The "Users" view should present a list of users who have actively
+interacted with the repository object (tool).
+Alongside with default user profile data the list must contain the following
+information:
+
+* First Access
+* Last Access
+* Access Number
+* Time Spent
+* Percentage
+* Status
+* Last Status Change
+* Mark
+* Remark
+
+The "Mark" and "Remark" properties must be editable.
+
+##### Summary
+
+The "Summary" view must present aggregated/accumulated statistics
+about the learning progress of all users that have interacted with the tool.
+Similar to other learning progress enabled objects in ILIAS and in addition to
+the object title and aggregated numbers of supported user profile fields, the view
+should provide information about:
+* ∑ Users
+* ∑ Access Number
+* Ø Access Number / User
+* Ø Time Spent / User
+* Ø Time Spent / Access
+* Ø Percentage / User
+* Status (grouped by the different learning progress status types)
+* Last Status Change
+* Mark
+* First Access
+* Last Access
 
 #### RBAC and Permissions Tab
 
-TODO @mjansenDatabay
+The permissions screen shows the typical matrix of roles and permissions. The plugin
+therefore only consumes the corresponding interfaces provided by the "RBAC" component.
+
+The repository object type must support and respect the following
+default "RBAC" operations:
+
+* Visible
+* Read
+* Copy
+* Edit Settings
+* Delete
+* Change Permissions
+* View learning progress of other users
+* Edit Learning Progress Settings
 
 ### Page Component Plugin
 
