@@ -214,8 +214,8 @@ of the specific tool in the "Context" of an ILIAS repository object:
 
 * Username Presentation (as provided by the ILIAS user component and it's interfaces)
 * *timestamp* (formated acc. to the users' personal ILIAS date/time presentation settings)
-* *activityProgress* (optional)
-* *gradingProgress* (optional)
+* *activityProgress* 
+* *gradingProgress*
 * *scoreGiven* (optional)
 * *scoreMaximum* (optional)
 * *comment* (optional)
