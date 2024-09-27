@@ -187,13 +187,45 @@ It supports these actions (m = multi, s = single):
 * view grades (m/s)
 * delete outcome (m/s) 
 
-#### Grade Book
+#### Grade Book, Results and Scores
 
-The grade book tab provides a view to the grades of the users that have interacted
-with the tool. It is visible/accessible, if the tool supports the "Assignment and Grade
-Services Specification".
+The "Grade Book, Results and Scores" tab provides a view to the performance of the
+users that have interacted with the tool. It is visible/accessible, if the tool
+supports the "Assignment and Grade Services Specification" and the "write" permission
+is granted for the acting user.
 
-TODO @mjansenDatabay
+Two sub-tabs are presented:
+
+1. Gradebook
+2. Score History
+
+##### Grade Book
+
+The "Grade Book" view presents a tabular gradebook/matrix of users (rows) and
+their results (the current/last submitted score in each case) ILIAS stored for
+the tool's "Line Items" (columns).
+
+@mjansenDatabay: Describe possible filters etc.
+
+##### Score History
+
+The view should present the following user score attributes for the "Line Items"
+of the specific tool in the "Context" of an ILIAS repository object:
+
+* Username Presentation (as provided by the ILIAS user component and it's interfaces)
+* *timestamp* (formated acc. to the users' personal ILIAS date/time presentation settings)
+* *activityProgress* (optional)
+* *gradingProgress* (optional)
+* *scoreGiven* (optional)
+* *scoreMaximum* (optional)
+* *comment* (optional)
+* *startedAt* (optional, formated acc. to the users' personal ILIAS date/time presentation settings)
+* *submittedAt* (optional, formated acc. to the users' personal ILIAS date/time presentation settings)
+
+Since a tool may submit multiple scores for a user for each "Line Item", the view
+should provide the history of score submissions.
+
+@mjansenDatabay: Describe possible filters etc.
 
 #### Learning Progress Tab
 
@@ -207,7 +239,7 @@ The learning progress is disabled by default and can be enabled in the "Settings
 1. Learning Progress is Deactivated (default)
 2. Learning Progress is Activated
   * TODO @mjansenDatabay: What's the name of this mode? How do we derive the ILIAS LP
-    based on the provided results/scores.
+    based on the provided user result (and scores) for the "Line Items" (1 - N).
 
 If the learning progress is enabled, the following sub-tabs are available:
 
@@ -231,7 +263,10 @@ information:
 * Mark
 * Remark
 
-The "Mark" and "Remark" properties must be editable.
+The "Mark" and "Remark" properties must be editable, similar to other object types.
+
+All data should be formatted according to existing ILIAS guidelines and the
+generic implementations in the "Tracking" component.
 
 ##### Summary
 
