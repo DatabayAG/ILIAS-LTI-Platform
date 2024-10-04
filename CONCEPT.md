@@ -209,23 +209,45 @@ the tool's "Line Items" (columns).
 
 ##### Score History
 
-The view should present the following user score attributes for the "Line Items"
-of the specific tool in the "Context" of an ILIAS repository object:
+The view presents a  table of the following user score attributes for the
+"Line Items" of the specific tool in the "Context" of an ILIAS
+repository object:
 
-* Username Presentation (as provided by the ILIAS user component and it's interfaces)
-* *timestamp* (formated acc. to the users' personal ILIAS date/time presentation settings)
-* *activityProgress* 
-* *gradingProgress*
-* *scoreGiven* (optional)
-* *scoreMaximum* (optional)
-* *comment* (optional)
-* *startedAt* (optional, formated acc. to the users' personal ILIAS date/time presentation settings)
-* *submittedAt* (optional, formated acc. to the users' personal ILIAS date/time presentation settings)
+* Username Presentation (as provided by the ILIAS user component and
+it's interfaces / sortable)
+* *timestamp* (formated acc. to the users' personal ILIAS
+date/time presentation settings / sortable)
+* *activityProgress* (sortable)
+* *gradingProgress* (sortable)
+* *scoreGiven* (optional, sortable)
+* *scoreMaximum* (optional, sortable)
+* *comment* (optional, sortable)
+* *startedAt* (optional, formated acc. to the users' personal
+ILIAS date/time presentation settings, sortable)
+* *submittedAt* (optional, formated acc. to the users' personal
+ILIAS date/time presentation settings, sortable)
 
-Since a tool may submit multiple scores for a user for each "Line Item", the view
-should provide the history of score submissions.
+Since a tool may submit multiple scores for a user for each "Line Item", the
+view provides the history of score submissions. Foreach user, who interacted
+with the tool, multiple rows are shown, one for each score submission.
 
-@mjansenDatabay: Describe possible filters etc.
+The folliwing filters are provided:
+
+* Username (type: text input / default value: empty)
+* Date Range (type: duration input / default values: start = \[NOW - 1 week\], end = \[NOW\])
+* Activity Progress (type: select input / default value: no option selected)
+  * Initialized
+  * Started
+  * InProgress
+  * Submitted
+  * Completed
+* Grading Progress (type: select input / default value: no option selected),
+with the following options:
+  * FullyGraded
+  * Pending
+  * PendingManual
+  * Failed
+  * NotReady
 
 #### Learning Progress Tab
 
@@ -238,8 +260,16 @@ The learning progress is disabled by default and can be enabled in the "Settings
 
 1. Learning Progress is Deactivated (default)
 2. Learning Progress is Activated
-  * TODO @mjansenDatabay: What's the name of this mode? How do we derive the ILIAS LP
-    based on the provided user result (and scores) for the "Line Items" (1 - N).
+  * TODO @mjansenDatabay/@klees: What's the name of this mode? How do we derive the
+    ILIAS LP based on the provided user results (and scores)?
+    * One Option: Each "Line Item" has a `scoreMaximum` attribute, so we
+      could (for instance) calculate the progress for each user and "Line Item",
+      and finally map this with the help of thresholds
+      (e.g. 80 % is mapped to `completed`, and \[x\] % of all
+      "Line Items" needs to be `completed`) to a corresponding ILIAS learning
+      progress status.
+    * Do we really want to provide such complicated logics?
+    * What UI elements do we need for such a configuration on this screen?
 
 If the learning progress is enabled, the following sub-tabs are available:
 
@@ -248,10 +278,9 @@ If the learning progress is enabled, the following sub-tabs are available:
 
 ##### Users
 
-The "Users" view should present a list of users who have actively
-interacted with the repository object (tool).
-Alongside with default user profile data the list must contain the following
-information:
+The "Users" view presents a list of users who have actively interacted with the
+repository object (tool). Alongside with default user profile data the list must
+contain the following information:
 
 * First Access
 * Last Access
@@ -274,7 +303,8 @@ The "Summary" view must present aggregated/accumulated statistics
 about the learning progress of all users that have interacted with the tool.
 Similar to other learning progress enabled objects in ILIAS and in addition to
 the object title and aggregated numbers of supported user profile fields, the view
-should provide information about:
+provides information about:
+
 * ∑ Users
 * ∑ Access Number
 * Ø Access Number / User
