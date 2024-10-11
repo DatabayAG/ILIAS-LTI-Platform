@@ -207,9 +207,12 @@ the tool's "Line Items" (columns).
 
 @mjansenDatabay: Describe possible filters etc.
 
+A button "Re-calculate Results" is displayed over the gradebook to re-calculate
+the results of the users based on the scores provided by the context.
+
 ##### Score History
 
-The view presents a  table of the following user score attributes for the
+The view presents a table of the following user score attributes for the
 "Line Items" of the specific tool in the "Context" of an ILIAS
 repository object:
 
@@ -271,7 +274,12 @@ The learning progress is disabled by default and can be enabled in the "Settings
     * Do we really want to provide such complicated logics?
     * What UI elements do we need for such a configuration on this screen?
 
-If the learning progress is enabled, the following sub-tabs are available:
+If the learning progress is enabled, a button "Re-calculate Learning Progress" is
+displayed on top of the settings form. A click on the button re-calculates the
+learning progress for all users based on the given results.
+
+Furthermore, the following sub-tabs are available if the learning progress is
+enabled:
 
 1. Users
 2. Summary
@@ -294,8 +302,8 @@ contain the following information:
 
 The "Mark" and "Remark" properties must be editable, similar to other object types.
 
-All data should be formatted according to existing ILIAS guidelines and the
-generic implementations in the "Tracking" component.
+All data is formatted according to existing ILIAS guidelines and the generic
+implementations in the "Tracking" component.
 
 ##### Summary
 
