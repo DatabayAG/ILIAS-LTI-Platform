@@ -205,10 +205,18 @@ The "Grade Book" view presents a tabular gradebook/matrix of users (rows) and
 their results (the current/last submitted score in each case) ILIAS stored for
 the tool's "Line Items" (columns).
 
-@mjansenDatabay: Describe possible filters etc.
-
-A button "Re-calculate Results" is displayed over the gradebook to re-calculate
+A button "Re-calculate Results" is displayed above the gradebook to re-calculate
 the results of the users based on the scores provided by the context.
+
+Below this button, a filter is provided to filter (type: text input / default value: empty)
+the grade book by its users. The entered search string should be searched in
+the user's username, email and firstname/lastname.
+
+The ordering of the gradebook is changeable for the following fields:
+
+* Username (ascending/descending)
+* Line Item Result 1 (ascending/descending)
+* Line Item Result N (ascending/descending)
 
 ##### Score History
 
