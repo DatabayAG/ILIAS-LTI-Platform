@@ -199,11 +199,17 @@ Two sub-tabs are presented:
 1. Gradebook
 2. Score History
 
+While the "Assignment and Grade Services Specification" describes
+multiple ways to manage create and manage line item, the repository object
+supports the "Declarative Approach" only by creating the line item in the moment
+of ressource link creation.
+This approach is backwards compatible with older LTI versions.
+
 ##### Grade Book
 
 The "Grade Book" view presents a tabular gradebook/matrix of users (rows) and
-their results (the current/last submitted score in each case) ILIAS stored for
-the tool's "Line Items" (columns).
+their results (the current/last submitted score) ILIAS stored for
+the tool's "Line Item".
 
 A button "Re-calculate Results" is displayed above the gradebook to re-calculate
 the results of the users based on the scores provided by the context.
@@ -215,13 +221,12 @@ the user's username, email and firstname/lastname.
 The ordering of the gradebook is changeable for the following fields:
 
 * Username (ascending/descending)
-* Line Item Result 1 (ascending/descending)
-* Line Item Result N (ascending/descending)
+* Line Item Result (ascending/descending)
 
 ##### Score History
 
 The view presents a table of the following user score attributes for the
-"Line Items" of the specific tool in the "Context" of an ILIAS
+"Line Item" of the specific tool in the "Context" of an ILIAS
 repository object:
 
 * Username Presentation (as provided by the ILIAS user component and
@@ -238,7 +243,7 @@ ILIAS date/time presentation settings, sortable)
 * *submittedAt* (optional, formated acc. to the users' personal
 ILIAS date/time presentation settings, sortable)
 
-Since a tool may submit multiple scores for a user for each "Line Item", the
+Since a tool may submit multiple scores for a user for the "Line Item", the
 view provides the history of score submissions. Foreach user, who interacted
 with the tool, multiple rows are shown, one for each score submission.
 
@@ -273,14 +278,6 @@ The learning progress is disabled by default and can be enabled in the "Settings
 2. Learning Progress is Activated
   * TODO @mjansenDatabay/@klees: What's the name of this mode? How do we derive the
     ILIAS LP based on the provided user results (and scores)?
-    * One Option: Each "Line Item" has a `scoreMaximum` attribute, so we
-      could (for instance) calculate the progress for each user and "Line Item",
-      and finally map this with the help of thresholds
-      (e.g. 80 % is mapped to `completed`, and \[x\] % of all
-      "Line Items" needs to be `completed`) to a corresponding ILIAS learning
-      progress status.
-    * Do we really want to provide such complicated logics?
-    * What UI elements do we need for such a configuration on this screen?
 
 If the learning progress is enabled, a button "Re-calculate Learning Progress" is
 displayed on top of the settings form. A click on the button re-calculates the
