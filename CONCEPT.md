@@ -82,8 +82,9 @@ functionality, such as granting permission via RBAC or adding options in the rep
 of ILIAS are listed here only if there shall be notable deviations from standard
 behaviour.
 
-TODO: Read more about:
+The Use-Cases are based on the following specifications:
 
+* [Core Specification](https://www.imsglobal.org/spec/lti/v1p3)
 * [Assignments and Grade Service](https://www.imsglobal.org/spec/lti-ags/v2p0/)
 * [Name and Role Provisioning Service](https://www.imsglobal.org/spec/lti-nrps/v2p0)
 * [Deep Linking Specification](https://www.imsglobal.org/spec/lti-dl/v2p0)
@@ -103,7 +104,9 @@ and include derived use cases here.
 * As a **content creator** I want to include a LTI tool via the `deployment id as
   account identifier` model by attaching a certain deployment of a tool to my own
   account.
-* As a **content creator** I want to include an LTI tool deployed via any model.
+* As a **content creator** I want to include a LTI tool deployed via any model.
+* As a **content creator** I want to allow a LTI tool to post scores via the AGS
+  to a singular line item.
 
 ### Presentation
 
@@ -123,6 +126,14 @@ and include derived use cases here.
 ### Usage
 
 ### Include Tools in the content.
+
+### Evaluation
+
+* As a **content creator** I want to make the ILIAS learning progress depend on
+  the score for a single line item.
+* As an **administrator** I want to know if a tool has not posted a score so far,
+  because this might indicate that a tool does not use the AGS in general which
+  might lead to unexpected behaviour.
 
 ### Monitoring
 
@@ -374,6 +385,26 @@ not describe hooks into data of other ILIAS systems that the plugin uses via int
 ### Tool Deployment
 
 ### Tool Deployment Interaction Log
+
+### Assignment and Grading Service
+
+This models the data objects that the [AGS](https://www.imsglobal.org/spec/lti-ags/v2p0/)
+of LTI require. General idea is to model the data from the service faithfully. This
+will make it possible to record all data that is send by an LTI tool and only interpret
+it later. The other option would be to implement a custom data model and discard or
+reinterpret data on receival. This would mean, though, that the interpretation can not
+be changed later on.
+
+#### **Table:** Line Item
+
+* **lti_obj_id: int**: foreign key in `object_data`
+* **item_id: int**: starts at 1 for each lti object, primary together with `lti_obj_id`
+* **label: text**
+* **tag: text**
+* **scoreMaximum: int**
+* **start: datetime**
+* **end: datetime**
+ 
 
 ## Implementation
 
