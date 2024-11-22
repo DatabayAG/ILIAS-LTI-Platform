@@ -30,8 +30,8 @@ Both participating organisations, [Databay AG](https://www.databay.de) and
 [CaT Concepts and Training GmbH](https://www.concepts-and-training.de), do have
 customers that want to use LTI or are already using it. If LTI is already used this
 does not exclusivly happen via the ILIAS core implementation of LTI. Some customers
-use the [External Concent Plugin](https://github.com/DatabayAG/ExternalContent)
-which also implements LTI for ILIAS for a long time. The use of alternative
+use the [External Content Plugin](https://github.com/DatabayAG/ExternalContent)
+which also implemented LTI for ILIAS for a long time already. The use of alternative
 implementations and the reluctance to fully adopt LTI content in ILIAS demonstrate
 the requirement for a reliable LTI implementation for ILIAS.
 
@@ -55,10 +55,9 @@ The **goals** for this implementation are:
   ilObject, RBAC, the UI framework, as much as possible. Use modern patterns and
   approaches of the ILIAS community, such as UI framework, repository pattern and
   dependency injection as much as possible. Ensure the source code is maintainable by
-  adhering to clean code principles,  comprehensive documentation, and thorough testing.
+  adhering to clean code principles, comprehensive documentation, and thorough testing.
   This includes using consistent coding standards, modular design, and automated testing
-  to facilitate easy updates and collaboration.
-  Overall, this should be an implementation
+  to facilitate easy updates and collaboration. Overall, this should be an implementation
   that looks and feels like ILIAS, in the frontend and the backend, as much as possible.
 * The implementation should provide a basis to create specialized implementations
   for specific LTI 1.3 tools, e.g. by copying the plugin repository.
@@ -82,8 +81,9 @@ functionality, such as granting permission via RBAC or adding options in the rep
 of ILIAS are listed here only if there shall be notable deviations from standard
 behaviour.
 
-TODO: Read more about:
+The Use-Cases are based on the following specifications:
 
+* [Core Specification](https://www.imsglobal.org/spec/lti/v1p3)
 * [Assignments and Grade Service](https://www.imsglobal.org/spec/lti-ags/v2p0/)
 * [Name and Role Provisioning Service](https://www.imsglobal.org/spec/lti-nrps/v2p0)
 * [Deep Linking Specification](https://www.imsglobal.org/spec/lti-dl/v2p0)
@@ -92,7 +92,7 @@ and include derived use cases here.
 
 ### Deployment
 
-* As an **administator** I want to include a LTI tool via the single tenant deployment
+* As an **administrator** I want to include a LTI tool via the single tenant deployment
   model into my installation.
   * As a **content creator** I want to include LTI tools deployed in the single tenant
     model into my content.
@@ -103,12 +103,14 @@ and include derived use cases here.
 * As a **content creator** I want to include a LTI tool via the `deployment id as
   account identifier` model by attaching a certain deployment of a tool to my own
   account.
-* As a **content creator** I want to include an LTI tool deployed via any model.
+* As a **content creator** I want to include a LTI tool deployed via any model.
+* As a **content creator** I want to allow a LTI tool to post scores via the AGS
+  to a singular line item.
 
 ### Presentation
 
-* As a **content creator** I want to include an LTI tool as a repository object.
-* As a **content creator** I want to include an LTI tool as part of a ILIAS page
+* As a **content creator** I want to include a LTI tool as a repository object.
+* As a **content creator** I want to include a LTI tool as part of an ILIAS page
   editor page.
 * As a **content creator** I want to present/embed an LTI tool directly in ILIAS
   so it appears as normal ILIAS content.
@@ -119,10 +121,22 @@ and include derived use cases here.
   tool deplyoment.
 * As a **learner** I want to have a visual indication of the tool provider and the
   mode of presentation for a certain LTI tool repository object.
+* As a **learner** I want to be able to view my latest score for a certain tool,
+  including the latest comment that was given.
 
 ### Usage
 
 ### Include Tools in the content.
+
+### Evaluation
+
+* As a **content creator** I want to make the ILIAS learning progress depend on
+  the score for a single line item.
+* As a **content creator** I want the object to automatically determine the learning
+  progress based on a threshold for score that I have set.
+* As an **administrator** I want to know if a tool has not posted a score so far,
+  because this might indicate that a tool does not use the AGS in general which
+  might lead to unexpected behaviour.
 
 ### Monitoring
 
@@ -131,7 +145,7 @@ and include derived use cases here.
   about the performance of my learners, if the tool supports the
   "Assignment and Grade Services Specification".
 * As a **tutor** I want to know the learning progress of my learners for a tool.
-* As an **administator** I want to analyze problems of learners with a certain tool.
+* As an **administrator** I want to analyze problems of learners with a certain tool.
 
 ## Facilities and Views
 
@@ -267,7 +281,7 @@ Since a tool may submit multiple scores for a user for the "Line Item", the
 view provides the history of score submissions. Foreach user, who interacted
 with the tool, multiple rows are shown, one for each score submission.
 
-The folliwing filters are provided:
+The following filters are provided:
 
 * Username (type: text input / default value: empty)
 * Date Range (type: duration input / default values: start = \[NOW - 1 week\], end = \[NOW\])
@@ -418,7 +432,7 @@ As for other objects the title and description of the LTI tool repository object
 are indexed for the purpose of finding them via the ILIAS search.
 
 If we decide to support them later on, the "Metadata" component could be easily
-intetrated.
+integrated.
 
 #### Export/Import
 
@@ -468,9 +482,84 @@ not describe hooks into data of other ILIAS systems that the plugin uses via int
 
 ### Tool Deployment
 
-### Tool Deployment Interaction Log
+### Tool Deployment Communication Log
+
+#### **Table:** Communication Log (`lti_log`)
+
+* **lti_obj_id: int**: foreign key in `object_data`
+* **user_id: int(nullable)**: foreign key in `user_data`
+* **url: text**: the complete URL that was used for the interaction
+* **timestamp: datetime**: the moment the communication happened
+* **outgoing: bool**: is the communication outgoing or incoming
+* **header: clob**: the header of HTTP request
+* **payload: blob**: the content of HTTP request
+ 
+
+### Assignment and Grading Service
+
+This models the data objects that the [AGS](https://www.imsglobal.org/spec/lti-ags/v2p0/)
+of LTI require. General idea is to model the data from the service faithfully. This
+will make it possible to record all data that is send by an LTI tool and only interpret
+it later. The other option would be to implement a custom data model and discard or
+reinterpret data on receival. This would mean, though, that the interpretation can not
+be changed later on.
+
+#### **Table:** Line Item (`lti_line_item`)
+
+* **lti_obj_id: int**: foreign key in `object_data`
+* **item_id: int**: starts at 1 for each lti object, primary together with `lti_obj_id`
+* **label: text**
+* **resourceId: text(nullable)**
+* **tag: text(nullable)**
+* **scoreMaximum: float**
+* **start: datetime(nullable)**
+* **end: datetime(nullable)**
+* **gradesReleased: bool(nullable)**
+ 
+**resourceLinkId** is not included in the table, as since the documentation of AGS
+suggest that this property is only to be used if a tool creates line items on its
+own. Currently the plugin is not looking to support this feature.
+
+#### **Table:** Scores (`lti_score`)
+
+* **lti_obj_id: int**: foreign key in `object_data`
+* **item_id: int**: foreign key in `lti_line_item` together with `lti_obj_id`
+* **score_id: int**: starts at 1 for each (`lti_obj_id`, `item_id`), primary key together with (`lti_obj_id`, `item_id`)
+* **user_id: int**: foreign key in `user_data`
+* **scoring_user_id(nullable): int**: foreign key in `user_data`
+* **score_given: float(nullable)**
+* **score_maximum: float(nullable)**
+* **activity_progress: string**: one of "Initialized", "Started", "InProgress", "Submitted", "Completed"
+* **grading_progress: string**: one of "FullyGraded", "Pending", "PendingManual", "Failed", "NotReady"
+* **timestamp: datetime**: must support sub second precision
+* **started_at: datetime(nullable)**: must support sub second precision
+* **submitted_at: datetime(nullable)**: must support sub second precision
+* **comment: string(nullable)**
 
 ## Implementation
+
+### Repository for Assessments and Grading
+
+The current state of one user at a certain LTI object is one discrete domain of the
+LTI plugin and hence covered by one repository and according data objects. The repo
+shall provide methods to:
+
+* cover the requirements of the "Gradebook" view
+* cover the requirements of the "Score History" view
+* derive a value for the current learning progress of users according to the
+  data from the AGS
+
+
+#### Mapping of ActivityProgress and GradingProgress from AGS to ILIAS' Learning Progress
+
+* If the **GradingProgress** is **FullyGraded**, the setting for the scoring
+  threshold is used to either set the learning progress to **Completed** or
+  **Failed**.
+* If the **GradingProgress** is **not FullyGraded** and the **ActivityProgress**
+  is **Initialized**, the learning progress is **Not Attempted**.
+* Otherwise, the learning progress is **In Progress**.
+
+### Repository for Log
 
 ## Organisation
 
