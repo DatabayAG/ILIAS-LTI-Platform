@@ -189,10 +189,12 @@ It supports these actions (m = multi, s = single):
 
 #### Grade Book, Results and Scores
 
+TODO: If there is no line item, show a Messagebox > Info
+
 The "Grade Book, Results and Scores" tab provides a view to the performance of the
 users that have interacted with the tool. It is visible/accessible, if the tool
 supports the "Assignment and Grade Services Specification" and the "write" permission
-is granted for the acting user.
+is granted for the acting user. This also applies to all subordinate views.
 
 Two sub-tabs are presented:
 
@@ -205,23 +207,41 @@ supports the "Declarative Approach" only by creating the line item in the moment
 of ressource link creation.
 This approach is backwards compatible with older LTI versions.
 
-##### Grade Book
+##### Gradebook
 
-The "Grade Book" view presents a tabular gradebook/matrix of users (rows) and
+The "Gradebook" view presents a tabular gradebook/matrix of users (rows) and
 their results (the current/last submitted score) ILIAS stored for
 the tool's "Line Item".
+
+| **Username**         | **Line Item Result**  |
+|-----------------------|----------------------|
+| `john.doe`           | `85`                  |
+| `jane.smith`         | `90`                  |
+| `student123`         | `78`                  |
+| `emma.brown`         | `92`                  |
+| `test_user456`       | `88`                  |
+
+The username presentation adheres to the corresponding ILIAS guidelines.
 
 A button "Re-calculate Results" is displayed above the gradebook to re-calculate
 the results of the users based on the scores provided by the context.
 
 Below this button, a filter is provided to filter (type: text input / default value: empty)
-the grade book by its users. The entered search string should be searched in
+the gradebook by its users. The entered search string should be searched in
 the user's username, email and firstname/lastname.
 
 The ordering of the gradebook is changeable for the following fields:
 
 * Username (ascending/descending)
 * Line Item Result (ascending/descending)
+
+Validation Scenarios:
+* Empty gradebook: If no records ar given, the view should display a
+  "No records" message.
+
+Edge Cases:
+* High Volume Data: Confirm the view performs efficiently when listing a
+  high number of records.
 
 ##### Score History
 
@@ -265,11 +285,24 @@ with the following options:
   * Failed
   * NotReady
 
+Validation Scenarios:
+* Empty history: If no records ar given, the view should display a
+  "No records" message.
+
+Edge Cases:
+* High Volume Data: Confirm the view performs efficiently when listing a
+  high number of records.
+* Localized Formatting: Test with users in different timezones
+  (e.g., "Europe/Berlin", "GMT") to confirm that datetime formatting adapts accordingly.
+
 #### Learning Progress Tab
+
+TODO: If there is no line item, show a Messagebox > Info
 
 The learning progress tab provides screens to optionally enable and access the
 learning progress of ILIAS users of the tool. It is visible/accessible,
 if the tool supports the "Assignment and Grade Services Specification".
+Furthermore, the regular access checks apply for all subordinted views with this tab.
 
 The learning progress is disabled by default and can be enabled in the "Settings"
 (sub-)tab. The settings screen must provide the following modes:
@@ -288,6 +321,9 @@ enabled:
 
 1. Users
 2. Summary
+
+The views should be based on core components in terms of the elements on the
+user interface and the data presented.
 
 ##### Users
 
@@ -329,6 +365,68 @@ provides information about:
 * Mark
 * First Access
 * Last Access
+
+#### Protocol
+
+The protocol view presents a detailed and transparent overview of the incoming/outgoing
+communication stream. It is visible/readable if the "write" permission is granted
+for the acting user.
+
+The view is designed to help the the viewer quickly identify and
+understand the sequence of events and API calls, and their respective payloads.
+This transparency significantly reduces efforts in troubleshooting and bug
+hunting during productive use of the platform, ensuring smooth integration
+and reliable operation.
+
+A filter bar with a date range filter should be incorporated to enhance usability.
+This feature will allow users to narrow down the protocol data to specific periods,
+facilitating more efficient troubleshooting and analysis.
+
+Validation Scenarios:
+* Empty Table: If no events are recorded, the table should display a
+  "No records" message.
+* Localized Formatting: Test with users in different timezones
+  (e.g., "Europe/Berlin", "GMT") to confirm that datetime formatting adapts accordingly.
+* Data Completeness: Ensure all relevant columns are populated.
+
+Edge Cases:
+* Large Payloads: Verify the table handles large serialized payloads
+  (e.g., truncation or expandable sections).
+* High Volume Data: Confirm the view performs efficiently when listing a
+  high number of events.
+
+Expected Data Presentation Format:
+
+| **Date & Time**       | **Event Type**        | **Request Payload**                            |
+|-----------------------|-----------------------|------------------------------------------------|
+| `2024-11-22 15:35:45` | `ScoreSubmission`     | `{ "scoreGiven": 85, "userId": "123" }`            |
+| `2024-11-22 15:32:12` | `DeepLinkingResponse` | `{ "content_items": [...], "userId": "456" }` |
+| `2024-11-22 15:30:00` | `LaunchRequest`       | `{ "userId": "123", "role": "Student" }`      |
+
+The folliwing filters are provided:
+
+* Date Range (type: duration input / default values: start = \[NOW - 1 week\], end = \[NOW\])
+
+#### Metadata (Discovery/Searchability)
+
+The repository object will not support the metadata component integration.
+In the context of a tool consumer there is no need to manage metadata.
+Metadata in ILIAS is used for searchability and for publishing objects
+located in the "Public Area" into "Open Graph"-enabled platforms.
+
+As for other objects the title and description of the LTI tool repository objects
+are indexed for the purpose of finding them via the ILIAS search.
+
+If we decide to support them later on, the "Metadata" component could be easily
+intetrated.
+
+#### Export/Import
+
+Export/Import of the repository object is not supported.
+
+As user and learning data are not exported for data protection reasons in accordance
+with the ILIAS guidelines, we do not see any added value in simply exporting/importing
+settings and/or optional line item data for a tool.
 
 #### RBAC and Permissions Tab
 
