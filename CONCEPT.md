@@ -82,8 +82,9 @@ functionality, such as granting permission via RBAC or adding options in the rep
 of ILIAS are listed here only if there shall be notable deviations from standard
 behaviour.
 
-TODO: Read more about:
+The Use-Cases are based on the following specifications:
 
+* [Core Specification](https://www.imsglobal.org/spec/lti/v1p3)
 * [Assignments and Grade Service](https://www.imsglobal.org/spec/lti-ags/v2p0/)
 * [Name and Role Provisioning Service](https://www.imsglobal.org/spec/lti-nrps/v2p0)
 * [Deep Linking Specification](https://www.imsglobal.org/spec/lti-dl/v2p0)
@@ -103,7 +104,9 @@ and include derived use cases here.
 * As a **content creator** I want to include a LTI tool via the `deployment id as
   account identifier` model by attaching a certain deployment of a tool to my own
   account.
-* As a **content creator** I want to include an LTI tool deployed via any model.
+* As a **content creator** I want to include a LTI tool deployed via any model.
+* As a **content creator** I want to allow a LTI tool to post scores via the AGS
+  to a singular line item.
 
 ### Presentation
 
@@ -119,10 +122,22 @@ and include derived use cases here.
   tool deplyoment.
 * As a **learner** I want to have a visual indication of the tool provider and the
   mode of presentation for a certain LTI tool repository object.
+* As a **learner** I want to be able to view my latest score for a certain tool,
+  including the latest comment that was given.
 
 ### Usage
 
 ### Include Tools in the content.
+
+### Evaluation
+
+* As a **content creator** I want to make the ILIAS learning progress depend on
+  the score for a single line item.
+* As a **content creator** I want the object to automatically determine the learning
+  progress based on a threshold for score that I have set.
+* As an **administrator** I want to know if a tool has not posted a score so far,
+  because this might indicate that a tool does not use the AGS in general which
+  might lead to unexpected behaviour.
 
 ### Monitoring
 
@@ -470,7 +485,62 @@ not describe hooks into data of other ILIAS systems that the plugin uses via int
 
 ### Tool Deployment Interaction Log
 
+### Assignment and Grading Service
+
+This models the data objects that the [AGS](https://www.imsglobal.org/spec/lti-ags/v2p0/)
+of LTI require. General idea is to model the data from the service faithfully. This
+will make it possible to record all data that is send by an LTI tool and only interpret
+it later. The other option would be to implement a custom data model and discard or
+reinterpret data on receival. This would mean, though, that the interpretation can not
+be changed later on.
+
+#### **Table:** Line Item (`lti_line_item`)
+
+* **lti_obj_id: int**: foreign key in `object_data`
+* **item_id: int**: starts at 1 for each lti object, primary together with `lti_obj_id`
+* **label: text**
+* **resourceId: text(nullable)**
+* **tag: text(nullable)**
+* **scoreMaximum: float**
+* **start: datetime(nullable)**
+* **end: datetime(nullable)**
+* **gradesReleased: bool(nullable)**
+ 
+**resourceLinkId** is not included in the table, as since the documentation of AGS
+suggest that this property is only to be used if a tool creates line items on its
+own. Currently the plugin is not looking to support this feature.
+
+#### **Table:** Scores (`lti_score`)
+
+* **lti_obj_id: int**: foreign key in `object_data`
+* **item_id: int**: foreign key in `lti_line_item` together with `lti_obj_id`
+* **score_id: int**: starts at 1 for each (`lti_obj_id`, `item_id`), primary key together with (`lti_obj_id`, `item_id`)
+* **user_id: int**: foreign key in `user_data`
+* **scoring_user_id(nullable): int**: foreign key in `user_data`
+* **score_given: float(nullable)**
+* **score_maximum: float(nullable)**
+* **activity_progress: string**: one of "Initialized", "Started", "InProgress", "Submitted", "Completed"
+* **grading_progress: string**: one of "FullyGraded", "Pending", "PendingManual", "Failed", "NotReady"
+* **timestamp: datetime**: must support sub second precision
+* **started_at: datetime(nullable)**: must support sub second precision
+* **submitted_at: datetime(nullable)**: must support sub second precision
+* **comment: string(nullable)**
+
 ## Implementation
+
+### Mapping of ActivityProgress and GradingProgress from AGS to ILIAS' Learning Progress
+
+* If the **GradingProgress** is **FullyGraded**, the setting for the scoring
+  threshold is used to either set the learning progress to **Completed** or
+  **Failed**.
+
+|                    |**Initialized**|**Started**|**InProgress**|**Submitted**|**Completed**|
+| **FullyGraded**    | 
+| **Pending**        |
+| **PendingManual**  |
+| **Failed**         |
+| **NotReady**       |
+
 
 ## Organisation
 
