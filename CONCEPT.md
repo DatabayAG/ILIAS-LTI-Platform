@@ -171,12 +171,55 @@ tenant deployment modes.
 
 #### Creation Screen
 
+#### Content Tab
+
+Depending on the selected "Launch Option" in the [settings tab](#settings-tab),
+the tool is presented in the "Content" tab in one of the following ways:
+
+* same window
+  * a button appears in the toolbar for launching the tool.
+    when clicked, the content replaces the ILIAS screen in the current window.
+    The user returns to the ILIAS interface when leaving the content,
+    either via navigation options provided by the tool or through browser controls.
+* new window
+  * a button appears in the toolbar for launching the tool in a new window. The new
+    window opens the content, providing a dedicated space for interaction. Upon leaving
+    the content, the window is closed automatically.
+* embedded
+  * the tool is displayed within an HTML iframe inside the "Content" tab. The iframe
+    dynamically adjusts to fit the tool's dimensions if supported.
+
+#### Info Tab
+
+The "Info" tab functionality depends on the corresponding configuration in
+the [settings  tab](#settings-tab).
+
+* When enabled:
+  The repository object delegates rendering to the "Info Screen" component,
+  which provides the default view for the "Info" tab.
+* When disabled:
+  * The "Info" tab must not be displayed in the interface.
+  * Direct access to the "Info" tab via its URL must be explicitly prevented.
+
+The configred status of the "Info Screen" setting must be defined in the "List GUI"
+of the repository object (see: `\ilObjectListGUI::getInfoScreenStatus`).
+
 #### Settings Tab
 
 The settings screen offers the following standard ILIAS components:
 
 * properties of ilObject (title, description)
 * availability (on-/offline, period)
+* visibility of "Info" tab
+* launch options:
+  * same window
+    * the content is opened in the same window and replaces the ILIAS screen.
+  * new window
+    * the content is opened in a new window.
+  * embedded
+    * the tool is opened within the ILIAS context as an embedded content.
+
+TODO @mjansenDatabay: Add launch options
 
 TODO:
 * @klees: Do we want to tie icons to the *object* or to the *tool*?
@@ -203,7 +246,9 @@ It supports these actions (m = multi, s = single):
 
 #### Grade Book, Results and Scores
 
-TODO: If there is no line item, show a Messagebox > Info
+If no “Line Item” is available, the user is shown a corresponding message in
+a "MessageBox > Info" stating that the “Grade Book” will be available when
+the “Line Item” is available.
 
 The "Grade Book, Results and Scores" tab provides a view to the performance of the
 users that have interacted with the tool. It is visible/accessible, if the tool
@@ -311,7 +356,9 @@ Edge Cases:
 
 #### Learning Progress Tab
 
-TODO: If there is no line item, show a Messagebox > Info
+If no “Line Item” is available, the user is shown a corresponding message in
+a "MessageBox > Info" stating that the “Learning Progress” will be available when
+the “Line Item” is available.
 
 The learning progress tab provides screens to optionally enable and access the
 learning progress of ILIAS users of the tool. It is visible/accessible,
