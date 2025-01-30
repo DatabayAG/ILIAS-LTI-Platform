@@ -473,15 +473,19 @@ Edge Cases:
 
 Expected Data Presentation Format:
 
-| **Date & Time**       | **Event Type**        | **Request Payload**                            |
-|-----------------------|-----------------------|------------------------------------------------|
-| `2024-11-22 15:35:45` | `ScoreSubmission`     | `{ "scoreGiven": 85, "userId": "123" }`            |
-| `2024-11-22 15:32:12` | `DeepLinkingResponse` | `{ "content_items": [...], "userId": "456" }` |
-| `2024-11-22 15:30:00` | `LaunchRequest`       | `{ "userId": "123", "role": "Student" }`      |
+| **Date & Time**       | **URL**                 | User | **Request Header**                                      | **Request Body**                                                                                                         |
+|-----------------------|-------------------------|-------------------|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `2024-11-22 15:35:45` | URL/scores              | zeus              | Content-Type: application/vnd.ims.lis.v1.score+json ... | `{ "scoreGiven": 85, "userId": "123" }`                                                                                  |
+| `2024-11-22 15:32:12` | URL/deep-linking-launch | odysseus          | Content-Type: application/x-www-form-urlencoded ...     | `{ "iss": "962fa4d8-bcbf-49a0-94b2-2de05ad274af", "https://purl.imsglobal.org/spec/lti-dl/claim/content_items": [...] }` |
+
+Because some rquests contain data wrapped in a "JSON Web Token", the log
+should always show the decoded shape of a "JSON Web Token".
 
 The following filters are provided:
 
 * Date Range (type: duration input / default values: start = \[NOW - 1 week\], end = \[NOW\])
+* User (type: text input / default value: empty)
+  * The entered search string should be searched in the user's username, email and firstname/lastname.
 
 (Vielleicht hier noch den "angemeldeten User" aufnehmen? - RK)
 
