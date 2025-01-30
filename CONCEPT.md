@@ -72,6 +72,18 @@ The **non-goals** for this implementation are:
   it is not intended to provide a generic LTI 1.3 implementation for PHP.
 * The implementation shall not implement any vendor specific logic to accomodate certain
   LTI 1.3 tools.
+
+## First Iteration: Basic Interface as Repository Object
+
+As of January '25, this plugin specification has reached a maturity that warrants a
+first iteration to implement the plugin. The first iteration won't support all targeted
+use-cases or ideas. Instead, it shall implement the LTI interface as a basic
+Repository Object, as described below. Other facilities, such as Page Editor Components,
+will be added later. The first iteration shall create a usable implementation that is
+up to the goals defined above. The use cases and moving parts that are subject to
+the first iteration are marked with (I1).
+
+For the first iteration, the Deep Linking Specification won't be considered.
   
 ## Use-Cases
 
@@ -90,12 +102,12 @@ The Use-Cases are based on the following specifications:
 
 and include derived use cases here.
 
-### Deployment
+### Deployment 
 
 * As an **administrator** I want to include a LTI tool via the single tenant deployment
-  model into my installation.
+  model into my installation. (I1)
   * As a **content creator** I want to include LTI tools deployed in the single tenant
-    model into my content.
+    model into my content. (I1)
 * As an **administrator** I want to include a LTI tool via the multi tenant deployment
   model into my installation.
   * As a **content creator** I want to include LTI tools deployed in the multi tenant
@@ -109,7 +121,7 @@ and include derived use cases here.
 
 ### Presentation
 
-* As a **content creator** I want to include a LTI tool as a repository object.
+* As a **content creator** I want to include a LTI tool as a repository object. (I1)
 * As a **content creator** I want to include a LTI tool as part of an ILIAS page
   editor page.
 * As a **content creator** I want to present/embed an LTI tool directly in ILIAS
@@ -120,15 +132,23 @@ and include derived use cases here.
   editor, as "normal" ILIAS content, via external page) is used for a certain LTI
   tool deplyoment.
 * As a **learner** I want to have a visual indication of the tool provider and the
-  mode of presentation for a certain LTI tool repository object.
+  mode of presentation for a certain LTI tool repository object. (I1)
 * As a **learner** I want to be able to view my latest score for a certain tool,
-  including the latest comment that was given.
+  including the latest comment that was given. (I1)
+* As an **administrator** I want to be able to attach a certain icon to a tool,
+  so that this icon is used to indicate objects (etc.) that use this tool.
 
 ### Usage
 
+_This section may contain more use cases regarding the handling of the LTI objects
+by learners._
+
 ### Include Tools in the content.
 
-### Evaluation
+_This section may contain more use cases regarding the inclusion of the LTI objects
+via the ILIAS Page Editor._
+
+### Evaluation (I1)
 
 * As a **content creator** I want to make the ILIAS learning progress depend on
   the score for a single line item.
@@ -138,7 +158,7 @@ and include derived use cases here.
   because this might indicate that a tool does not use the AGS in general which
   might lead to unexpected behaviour.
 
-### Monitoring
+### Monitoring (I1)
 
 * As a **tutor** I want to know, which of my learners have already used a tool.
 * As a **tutor** I want to have access to the grade book of a tool to have insights
@@ -153,15 +173,13 @@ This section describes the individual parts that make the plugin functionality.
 It lists all things that users will find in ILIAS and briefly describes their content
 and functionality.
 
-### Plugin
+### Plugin: LTI-Object (I1)
 
 The functionality is delivered via a ILIAS repository object plugin. The plugin
 provides the core repository object and allows to add and configure tools. It also
 contains the code required for the auxiliary page component plugin.
 
-#### Plugin Configuration
-
-### Tool Configuration
+### Tool Configuration (I1)
 
 Via the global screen service, the plugin provides an item for the main menu that
 gives access to a configuration screen for tools provided in the single and multi
@@ -169,9 +187,9 @@ tenant deployment modes.
 
 ### Repository Object
 
-#### Creation Screen
+#### Creation Screen (I1)
 
-#### Content Tab
+#### Content Tab (I1)
 
 Depending on the selected "Launch Option" in the [settings tab](#settings-tab),
 the tool is presented in the "Content" tab in one of the following ways:
@@ -189,7 +207,7 @@ the tool is presented in the "Content" tab in one of the following ways:
   * the tool is displayed within an HTML iframe inside the "Content" tab. The iframe
     dynamically adjusts to fit the tool's dimensions if supported.
 
-#### Info Tab
+#### Info Tab (I1)
 
 The "Info" tab functionality depends on the corresponding configuration in
 the [settings  tab](#settings-tab).
@@ -218,14 +236,12 @@ The settings screen offers the following standard ILIAS components:
     * the content is opened in a new window.
   * embedded
     * the tool is opened within the ILIAS context as an embedded content.
+* score for completion: set a threshold as percentage of score that a user needs
+  to reach at the tool to gain the learning progress "completed".
 
 TODO @mjansenDatabay: Add launch options
 
-TODO:
-* @klees: Do we want to tie icons to the *object* or to the *tool*?
-* @mjansenDatabay: IMO the icon should be tied to the *tool*, **not** to the *object*.
-
-#### Participants Tab
+#### Participants Tab (I1)
 
 The participants tabs shows a UI data table containing all users that have actively
 interacted with the tool deployed via the repository object. The table contains
@@ -244,11 +260,11 @@ It supports these actions (m = multi, s = single):
 * view grades (m/s)
 * delete outcome (m/s) 
 
-#### Grade Book, Results and Scores
+#### Grade Book, Results and Scores (I1)
 
-If no “Line Item” is available, the user is shown a corresponding message in
-a "MessageBox > Info" stating that the “Grade Book” will be available when
-the “Line Item” is available.
+If there isn't any data available regardind the  “Line Item” is available, the
+user is shown a corresponding message in a "MessageBox > Info" stating that
+the “Grade Book” will be available once data about the “Line Item” is available.
 
 The "Grade Book, Results and Scores" tab provides a view to the performance of the
 users that have interacted with the tool. It is visible/accessible, if the tool
@@ -266,7 +282,7 @@ supports the "Declarative Approach" only by creating the line item in the moment
 of ressource link creation.
 This approach is backwards compatible with older LTI versions.
 
-##### Gradebook
+##### Gradebook (I1)
 
 The "Gradebook" view presents a tabular gradebook/matrix of users (rows) and
 their results (the current/last submitted score) ILIAS stored for
@@ -293,6 +309,8 @@ The ordering of the gradebook is changeable for the following fields:
 
 * Username (ascending/descending)
 * Line Item Result (ascending/descending)
+* additional profile data provided via the according ILIAS logic ("Visible in
+  Course" for the lack of possibility to add own scopes)
 
 Validation Scenarios:
 * Empty gradebook: If no records ar given, the view should display a
@@ -302,7 +320,7 @@ Edge Cases:
 * High Volume Data: Confirm the view performs efficiently when listing a
   high number of records.
 
-##### Score History
+##### Score History (I1)
 
 The view presents a table of the following user score attributes for the
 "Line Item" of the specific tool in the "Context" of an ILIAS
@@ -354,24 +372,21 @@ Edge Cases:
 * Localized Formatting: Test with users in different timezones
   (e.g., "Europe/Berlin", "GMT") to confirm that datetime formatting adapts accordingly.
 
-#### Learning Progress Tab
+#### Learning Progress Tab (I1)
 
-If no “Line Item” is available, the user is shown a corresponding message in
-a "MessageBox > Info" stating that the “Learning Progress” will be available when
-the “Line Item” is available.
+If there isn't any data available regardind the  “Line Item” is available, the
+user is shown a corresponding message in a "MessageBox > Info" stating that
+the “Grade Book” will be available once data about the “Line Item” is available.
 
 The learning progress tab provides screens to optionally enable and access the
-learning progress of ILIAS users of the tool. It is visible/accessible,
-if the tool supports the "Assignment and Grade Services Specification".
-Furthermore, the regular access checks apply for all subordinted views with this tab.
+learning progress of ILIAS users of the tool. Furthermore, the regular access
+checks apply for all subordinated views with this tab.
 
 The learning progress is disabled by default and can be enabled in the "Settings"
 (sub-)tab. The settings screen must provide the following modes:
 
 1. Learning Progress is Deactivated (default)
-2. Learning Progress is Activated
-  * TODO @mjansenDatabay/@klees: What's the name of this mode? How do we derive the
-    ILIAS LP based on the provided user results (and scores)?
+2. Use Score from Tool to determine Learning Progress according to Settings
 
 If the learning progress is enabled, a button "Re-calculate Learning Progress" is
 displayed on top of the settings form. A click on the button re-calculates the
@@ -384,7 +399,7 @@ enabled:
 2. Summary
 
 The views should be based on core components in terms of the elements on the
-user interface and the data presented.
+user interface and the data presented. 
 
 ##### Users
 
@@ -427,7 +442,7 @@ provides information about:
 * First Access
 * Last Access
 
-#### Protocol
+#### Protocol (I1)
 
 The protocol view presents a detailed and transparent overview of the incoming/outgoing
 communication stream. It is visible/readable if the "write" permission is granted
@@ -464,11 +479,13 @@ Expected Data Presentation Format:
 | `2024-11-22 15:32:12` | `DeepLinkingResponse` | `{ "content_items": [...], "userId": "456" }` |
 | `2024-11-22 15:30:00` | `LaunchRequest`       | `{ "userId": "123", "role": "Student" }`      |
 
-The folliwing filters are provided:
+The following filters are provided:
 
 * Date Range (type: duration input / default values: start = \[NOW - 1 week\], end = \[NOW\])
 
-#### Metadata (Discovery/Searchability)
+(Vielleicht hier noch den "angemeldeten User" aufnehmen? - RK)
+
+#### Metadata (Discovery/Searchability) (I1)
 
 The repository object will not support the metadata component integration.
 In the context of a tool consumer there is no need to manage metadata.
@@ -481,7 +498,7 @@ are indexed for the purpose of finding them via the ILIAS search.
 If we decide to support them later on, the "Metadata" component could be easily
 integrated.
 
-#### Export/Import
+#### Export/Import (I1)
 
 Export/Import of the repository object is not supported.
 
@@ -489,7 +506,7 @@ As user and learning data are not exported for data protection reasons in accord
 with the ILIAS guidelines, we do not see any added value in simply exporting/importing
 settings and/or optional line item data for a tool.
 
-#### RBAC and Permissions Tab
+#### RBAC and Permissions Tab (I1)
 
 The permissions screen shows the typical matrix of roles and permissions. The plugin
 therefore only consumes the corresponding interfaces provided by the "RBAC" component.
@@ -518,20 +535,16 @@ between both plugins should be done via well defined interfaces.
 The page component plugin must not depend on a concrete implementation or any
 kind of "duck typing" interface of the repository object plugin.
 
-### Page Component
-
 ## Data Model
 
 This section describes the data that the plugin needs to manage itself. It does
 not describe hooks into data of other ILIAS systems that the plugin uses via interfaces.
 
-### Tool
-
 ### Tool Deployment
 
 ### Tool Deployment Communication Log
 
-#### **Table:** Communication Log (`lti_log`)
+#### **Table:** Communication Log (`lti_log`) (I1)
 
 * **lti_obj_id: int**: foreign key in `object_data`
 * **user_id: int(nullable)**: foreign key in `user_data`
@@ -542,7 +555,7 @@ not describe hooks into data of other ILIAS systems that the plugin uses via int
 * **payload: blob**: the content of HTTP request
  
 
-### Assignment and Grading Service
+### Assignment and Grading Service (I1)
 
 This models the data objects that the [AGS](https://www.imsglobal.org/spec/lti-ags/v2p0/)
 of LTI require. General idea is to model the data from the service faithfully. This
@@ -585,7 +598,7 @@ own. Currently the plugin is not looking to support this feature.
 
 ## Implementation
 
-### Repository for Assessments and Grading
+### Repository for Assessments and Grading (I1)
 
 The current state of one user at a certain LTI object is one discrete domain of the
 LTI plugin and hence covered by one repository and according data objects. The repo
@@ -597,7 +610,7 @@ shall provide methods to:
   data from the AGS
 
 
-#### Mapping of ActivityProgress and GradingProgress from AGS to ILIAS' Learning Progress
+#### Mapping of ActivityProgress and GradingProgress from AGS to ILIAS' Learning Progress (I1)
 
 * If the **GradingProgress** is **FullyGraded**, the setting for the scoring
   threshold is used to either set the learning progress to **Completed** or
@@ -606,7 +619,21 @@ shall provide methods to:
   is **Initialized**, the learning progress is **Not Attempted**.
 * Otherwise, the learning progress is **In Progress**.
 
-### Repository for Log
+### Repository for Log (I1)
+
+The storage and review of communication logs with certain tools is a discrete domain
+to be found in the LTI repository plugin. That domain shall be covered with an according
+repository, which shall provide methods to:
+
+* cover the requirements of Protocol View
+
+### Repository for Tool Deployment (I1)
+
+The deployment of tools is a domain that needs to be covered system wide. At the moment,
+the tool deployments are attached to certain repository objects, but this connection
+will become more superficial once additional entry points to LTI objects for users are
+created or system wide reporting or controlling requirements arise. However, the deployments
+will need to exist from the beginning.
 
 ## Organisation
 
